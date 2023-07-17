@@ -1,19 +1,29 @@
 import argparse
 import numpy as np 
 import pandas as pd 
+import test
+import process_spectra_csv
+
+from test import *
+from process_spectra_csv import *
+
 
 def get_cli_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("csv", type=str)
-    parser.add_argument("-c", "--config", type=str, default="config.toml")
     parser.add_argument("-o", "--output", type=str, default="selected_vectors.csv", help="Output file path")
     cli = vars(parser.parse_args())
 
     return cli 
 
-def create_csv_file(file_name, selected_indexes, selected_vectors):
-    
-
+def create_csv_file(file_name, matrix, selected_indexes):
+   original_selected_vectors = np.array(matrix[selected_indexes])
+   concatinated_array = np.concatenate([np.array(selected_indexes).reshape(-1, 1),original_selected_vectors], axis=1)
+   df = pd.DataFrame(concatinated_array)
+   numbers = list(range(400, 701, 10))
+   numbers.insert(0, "Index")
+   df.to_csv(file_name, index=False, header = numbers)
+   
 
 def project_onto_orthonormal_space(orthonormal_vectors, vector_to_project):
     return sum(np.dot(vector, vector_to_project) * vector for vector in orthonormal_vectors)
@@ -47,7 +57,7 @@ def select_orthonormal_vectors(matrix, num_dimensions):
         selected_indexes.append(best_index)
         selected_vectors = gram_schmidt_append(selected_vectors, matrix[best_index, :])
 
-    return selected_vectors, selected_indexes
+    return selected_indexes, selected_vectors
 
 
 def main():
@@ -58,13 +68,23 @@ def main():
     output_file = cli_args["output"]
 
     # Read the CSV file using the provided file name
-    matrix = pd.read_csv(csv_file, header=None).values
-    selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, 24)
-    #selected_indexes, selected_vectors = test()
-    print(selected_indexes)
-    print(selected_vectors)
+    #matrix = pd.read_csv(csv_file, header=0).values
 
-    create_csv_file(output_file, selected_indexes, selected_vectors)
+    
+
+    #orthogonal_matrix = generate_orthogonal_matrix(31, 31)
+    #matrix = construct_matrix_with_zeroth_row(orthogonal_matrix)
+
+    Q_matrix = insert_zeroth_row_after_each_row(generate_QR_orthogonal_matrix(31))
+
+
+    selected_indexes, selected_vectors = select_orthonormal_vectors(Q_matrix, 24)
+
+    #selected_indexes, selected_vectors = test_selection_of_orthonormal_vectors()
+    #print(selected_vectors)
+    #print(selected_indexes)
+
+    create_csv_file(output_file, Q_matrix, selected_indexes)
     print("CSV file has been successfully created! ")
 
 
