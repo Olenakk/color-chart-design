@@ -65,6 +65,7 @@ def insert_zeroth_row_after_each_row(orthogonal_matrix):
 
 
 def main(): 
+
     selected_indexes, selected_vectors = test_selection_of_orthonormal_vectors()
     orthogonal_matrix = generate_QR_orthogonal_matrix(31)
     print(is_orthogonal(orthogonal_matrix))

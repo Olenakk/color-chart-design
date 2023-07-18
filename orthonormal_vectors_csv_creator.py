@@ -59,6 +59,11 @@ def select_orthonormal_vectors(matrix, num_dimensions):
 
     return selected_indexes, selected_vectors
 
+def select_orthonormal_vectors_given_light(matrix, num_dimensions, light):
+    num_rows, num_cols = matrix.shape()
+    selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, num_dimensions)
+    R_L = selected_vectors * light.reshape((1,num_cols))
+
 
 def main():
 
@@ -68,23 +73,9 @@ def main():
     output_file = cli_args["output"]
 
     # Read the CSV file using the provided file name
-    #matrix = pd.read_csv(csv_file, header=0).values
-
-    
-
-    #orthogonal_matrix = generate_orthogonal_matrix(31, 31)
-    #matrix = construct_matrix_with_zeroth_row(orthogonal_matrix)
-
-    Q_matrix = insert_zeroth_row_after_each_row(generate_QR_orthogonal_matrix(31))
-
-
-    selected_indexes, selected_vectors = select_orthonormal_vectors(Q_matrix, 24)
-
-    #selected_indexes, selected_vectors = test_selection_of_orthonormal_vectors()
-    #print(selected_vectors)
-    #print(selected_indexes)
-
-    create_csv_file(output_file, Q_matrix, selected_indexes)
+    matrix = pd.read_csv(csv_file, header=0).values
+    selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, 24)
+    create_csv_file(output_file, matrix, selected_indexes)
     print("CSV file has been successfully created! ")
 
 
