@@ -7,10 +7,10 @@ import process_spectra_csv
 from test import *
 from process_spectra_csv import *
 
-
 def get_cli_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("csv", type=str)
+    parser.add_argument("refl", type=str)
+    parser.add_argument("lt", type=str)
     parser.add_argument("-o", "--output", type=str, default="selected_vectors.csv", help="Output file path")
     cli = vars(parser.parse_args())
 
@@ -59,23 +59,29 @@ def select_orthonormal_vectors(matrix, num_dimensions):
 
     return selected_indexes, selected_vectors
 
-def select_orthonormal_vectors_given_light(matrix, num_dimensions, light):
-    num_rows, num_cols = matrix.shape()
-    selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, num_dimensions)
-    R_L = selected_vectors * light.reshape((1,num_cols))
-
+#Selecting most orthogonal reflectances based on the standard light 
+def select_orthonormal_vectors_given_light(R, L, num_dimensions):
+    num_rows, num_cols = R.shape
+    R_L = R*L.reshape((1,num_cols))
+    selected_indexes, selected_vectors = select_orthonormal_vectors(R_L, num_dimensions)
+    
+    return selected_indexes, selected_vectors
 
 def main():
 
     # Get command-line arguments
     cli_args = get_cli_args()
-    csv_file = cli_args["csv"]
+    refl_file = cli_args["refl"]
+    light_file = cli_args["lt"]
     output_file = cli_args["output"]
 
     # Read the CSV file using the provided file name
-    matrix = pd.read_csv(csv_file, header=0).values
-    selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, 24)
-    create_csv_file(output_file, matrix, selected_indexes)
+    R = pd.read_csv(refl_file, header=None).values
+    L = pd.read_csv(light_file, header=None).values
+  
+    #selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, 24)
+    selected_indexes, selected_vectors = select_orthonormal_vectors_given_light(R, L, 24)
+    create_csv_file(output_file, R, selected_indexes)
     print("CSV file has been successfully created! ")
 
 

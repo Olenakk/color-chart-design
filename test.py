@@ -2,7 +2,7 @@ import orthonormal_vectors_csv_creator
 import numpy as np 
 import pandas as pd
 import scipy
-
+import matplotlib.pyplot as plt
 from orthonormal_vectors_csv_creator  import *
 
 #Test with a matrix where the last 31 entries are orthogonal vectors 
@@ -63,6 +63,17 @@ def insert_zeroth_row_after_each_row(orthogonal_matrix):
 
     return N
 
+def plot_interp_data(xp, fp, pts, data_interp):
+    # Plot original and interpolated data
+    #plt.figure(figsize=(8, 6))
+    plt.plot(xp, fp, label='Original Data', color='blue', marker='.')
+    plt.scatter(pts, data_interp, label='Interpolated Data', color='red')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.legend()
+    plt.title('Interpolated Data Visualization')
+    plt.grid()
+    plt.show()
 
 def main(): 
 
