@@ -64,6 +64,7 @@ def main():
     # Separate 'xp' and 'fp' from the 'data'. See numpy.interp(): https://numpy.org/doc/stable/reference/generated/numpy.interp.html
     xp = data[0,:]
     fp = data[1:,:]
+
     # Perform interpolation for each row of 'fp' using 'xp' and 'pts'
     data_interp = np.array([np.interp(pts, xp, row) for row in fp])
 
@@ -72,6 +73,6 @@ def main():
         plot_interp_data(xp, fp, data_interp, pts, cli_args)
 
     # Save interpolated data to the output file
-    np.savetxt(cli_args["output"], data_interp, delimiter=",", fmt='%.4f')
+    np.savetxt(cli_args["output"], data_interp, header=",".join(map(str, pts)), delimiter=",", fmt='%.4f', comments='')
 
 if __name__ == "__main__":  main()

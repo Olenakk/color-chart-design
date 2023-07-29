@@ -1,9 +1,9 @@
-import orthonormal_vectors_csv_creator
+import ortho_sel
 import numpy as np 
 import pandas as pd
 import scipy
 import matplotlib.pyplot as plt
-from orthonormal_vectors_csv_creator  import *
+from ortho_sel  import *
 
 #Test with a matrix where the last 31 entries are orthogonal vectors 
 def test_selection_of_orthonormal_vectors(): 
