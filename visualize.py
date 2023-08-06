@@ -19,10 +19,9 @@ def get_cli_args():
     parser.add_argument("obs", type=str, help="Path to the CSV file containing the CIE Standard Observer data")
     parser.add_argument("o", type=str, help="Path to the output CSV file")
     parser.add_argument("-i", "--index", action="store_true", help="Ignore the first column of the provided reflectances data (that might include indices)" )
-    parser.add_argument("-rows", type=int, help="Indicates the number of rows in a color chart")
-    parser.add_argument("-cols", type=int, help="Indicates the number of columns in a color chart")
+    parser.add_argument("--rows", type=int, help="Indicates the number of rows in a color chart")
+    parser.add_argument("--cols", type=int, help="Indicates the number of columns in a color chart")
     
-
     # Parse the command-line arguments
     cli = vars(parser.parse_args())
 
@@ -58,21 +57,19 @@ def main():
 
     R = pd.read_csv(cli_args["refl"], dtype='float64', #header=None
                     ).values
-    
-    #################################################################################################
 
-    #C ode for ignoring the first column of the reflectances data 
+    #Ignore the first column of the reflectances data 
     if cli_args["index"]: # Check if the index flag is present
        R = pd.read_csv(cli_args["refl"], dtype='float64', usecols=range(1,R.shape[1]), #header=None, 
                        ).values
-
-    #################################################################################################
           
     L = pd.read_csv(cli_args["lt"], dtype='float64', #header=None
                     ).values
+    
     S = pd.read_csv(cli_args["obs"], dtype='float64', #header=None
                     ).values
 
+    R /= np.linalg.norm(R, axis=1).reshape(-1,1)
     I = calc_RGB(R, L, S)
     
     plot_image(I, cli_args)

@@ -1,11 +1,7 @@
 import argparse
 import numpy as np 
 import pandas as pd 
-import test
-import add_wavelength
 
-from test import *
-from add_wavelength import *
 
 def get_cli_args():
     parser = argparse.ArgumentParser()
@@ -24,7 +20,6 @@ def create_csv_file(file_name, matrix, selected_indexes):
    numbers.insert(0, "Index")
    df.to_csv(file_name, index=False, header = numbers)
    
-
 def project_onto_orthonormal_space(orthonormal_vectors, vector_to_project):
     return sum(np.dot(vector, vector_to_project) * vector for vector in orthonormal_vectors)
 

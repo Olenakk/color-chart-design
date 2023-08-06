@@ -1,18 +1,29 @@
+import argparse
 import ortho_sel
 import numpy as np 
 import pandas as pd
 import scipy
 import matplotlib.pyplot as plt
-from ortho_sel  import *
+import ortho_sel 
+import ortho_defect 
+
+def get_cli_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("outfile", type=str, help="Path to an output file")
+
+    cli = vars(parser.parse_args())
+
+    return cli 
 
 #Test with a matrix where the last 31 entries are orthogonal vectors 
+##########################################################################
 def test_selection_of_orthonormal_vectors(): 
     I = np.eye(31)
     I[-1,:] *= 2
     B = np.zeros((100, 31))
     B[:,0] = 1
     C = np.concatenate([B, I], axis = 0) * 42
-    selected_indexes, selected_vectors = select_orthonormal_vectors(C, 24)
+    selected_indexes, selected_vectors = ortho_sel.select_orthonormal_vectors(C, 24)
 
     return selected_indexes, selected_vectors
 
@@ -63,31 +74,32 @@ def insert_zeroth_row_after_each_row(orthogonal_matrix):
 
     return N
 
-def plot_interp_data(xp, fp, pts, data_interp):
-    # Plot original and interpolated data
-    #plt.figure(figsize=(8, 6))
-    plt.plot(xp, fp, label='Original Data', color='blue', marker='.')
-    plt.scatter(pts, data_interp, label='Interpolated Data', color='red')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.legend()
-    plt.title('Interpolated Data Visualization')
-    plt.grid()
-    plt.show()
 
-def main(): 
+#Testing orthogonality defect using an identity matrix 
+##########################################################################
+def test_ortho_defect_col(): 
+    defect = ortho_defect.ortho_defect_col(np.identity(10))
+    print(defect)
 
-    selected_indexes, selected_vectors = test_selection_of_orthonormal_vectors()
-    orthogonal_matrix = generate_QR_orthogonal_matrix(31)
-    print(is_orthogonal(orthogonal_matrix))
-    N = insert_zeroth_row_after_each_row(orthogonal_matrix)
 
-    N = pd.DataFrame(N) 
-    print(N)
-    N.to_csv("test_csv", index=False)
+#Testing the visualization using the normal distribution. 
+#Note: should be visualized as colors of the rainbow 
+##########################################################################
+def gaussian(mu, sigma, N): 
+    x = np.arange(0, N)
+    y = 1 / (sigma * np.sqrt(2 * np.pi)) * np.exp(-(x - mu)**2 / (2 * sigma**2))
 
-    
+    return y 
 
+def main():
+    cli_args = get_cli_args()
+    outfile = cli_args["outfile"]
+
+    R = np.array([gaussian(10*i, 50, 31) for i in range(50)])
+
+    print(R.shape)
+    selected_indexes, selected_vectors = ortho_sel.select_orthonormal_vectors(R, 24)
+    ortho_sel.create_csv_file(outfile, R, selected_indexes)
 
 # Run the main function
 if __name__ == "__main__":

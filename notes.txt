@@ -1,0 +1,12 @@
+1. All the csv files uploaded to any script (interp, ortho_sel, visualize) have to include column labels with wavelengths 
+2. If the visualization of reflectances includes a first bright square and the rest are dark, the algorithm counts the first row (labels of wavelength) as actual data 
+
+
+Notes: 
+- Visualization has blueish colors 
+
+TO DO: 
+
+- Debug color selection (selects very similar colors)
+- Test the orthogonality defect script -Done  MAKE SURE I CAN USE ABSOLUTE VALUE FOR THE DETERMINANT 
+- Write the spctral sensitivity reconstruction script (decide on the structure of the script)
