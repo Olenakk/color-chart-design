@@ -45,7 +45,7 @@ def select_orthonormal_vectors(matrix, num_dimensions):
                 continue
             candidate_vector = matrix[i, :]
             projection = project_onto_orthonormal_space(selected_vectors, candidate_vector)
-            dot = np.dot(candidate_vector, projection)
+            dot = np.dot(candidate_vector, projection)/(np.linalg.norm(candidate_vector)*np.linalg.norm(projection))
             if dot < min_dot:
                 min_dot = dot
                 best_index = i

@@ -9,7 +9,8 @@ import ortho_defect
 
 def get_cli_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("outfile", type=str, help="Path to an output file")
+    parser.add_argument("-i", "--infile", type=str, help="Path to an input file") 
+    parser.add_argument("-o", "--outfile", type=str, help="Path to an output file")
 
     cli = vars(parser.parse_args())
 
@@ -74,7 +75,6 @@ def insert_zeroth_row_after_each_row(orthogonal_matrix):
 
     return N
 
-
 #Testing orthogonality defect using an identity matrix 
 ##########################################################################
 def test_ortho_defect_col(): 
@@ -86,20 +86,44 @@ def test_ortho_defect_col():
 #Note: should be visualized as colors of the rainbow 
 ##########################################################################
 def gaussian(mu, sigma, N): 
-    x = np.arange(0, N)
-    y = 1 / (sigma * np.sqrt(2 * np.pi)) * np.exp(-(x - mu)**2 / (2 * sigma**2))
+    #x = np.arange(0, N)
+    x = np.linspace(0, 1, N)
+    #y = 1 / (sigma * np.sqrt(2 * np.pi)) * np.exp(-(x - mu)**2 / (2 * sigma**2))
+    y = np.exp(-(x - mu)**2 / (2 * sigma**2))
 
     return y 
 
+#Testing rainbow colors (visualization) 
+def test_gaus(num, cli_args): 
+    outfile = cli_args["outfile"]
+    #num - number of normal distributions to be generated 
+    #num = 10 
+    R = np.array([gaussian(1/num*i, 0.1, 31) for i in range(num+1)])
+
+    for row in R:
+        plt.plot(np.linspace(0, 1, 31), row)
+
+    plt.show()
+    np.savetxt(outfile, R, delimiter=',', fmt='%.4f')
+
+#Shuffle the dataset to see if it produces the same output 
+##########################################################################
+def shuffle(cli_args): 
+    infile = cli_args["infile"]
+    outfile = cli_args["outfile"]
+    matrix = pd.read_csv(infile#, header=None
+                    ).values
+    np.random.shuffle(matrix)
+    df = pd.DataFrame(matrix)
+
+    return df 
+
 def main():
     cli_args = get_cli_args()
-    outfile = cli_args["outfile"]
+    matrix = shuffle(cli_args)
+    numbers = list(range(400, 701, 10))
+    matrix.to_csv(cli_args["outfile"], index=False, header = numbers)
 
-    R = np.array([gaussian(10*i, 50, 31) for i in range(50)])
-
-    print(R.shape)
-    selected_indexes, selected_vectors = ortho_sel.select_orthonormal_vectors(R, 24)
-    ortho_sel.create_csv_file(outfile, R, selected_indexes)
 
 # Run the main function
 if __name__ == "__main__":
