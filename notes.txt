@@ -2,11 +2,12 @@
 2. If the visualization of reflectances includes a first bright square and the rest are dark, the algorithm counts the first row (labels of wavelength) as actual data 
 
 
-Notes: 
-- Visualization has blueish colors 
+Questions: 
+- Does it make sense that some of the determinants for selected vectors are zero (MacBeth)? 
 
 TO DO: 
-
-- Debug color selection (selects very similar colors)
-- Test the orthogonality defect script -Done  MAKE SURE I CAN USE ABSOLUTE VALUE FOR THE DETERMINANT 
+- Send a CSV of RGBs to Derya 
+- Ortho_sel: save an output file with file name and ortho defect 
+- Visualize.py: allow to visualize all the csv files in a specified folder 
+- Visualize the selected rows from MacBeth 
 - Write the spctral sensitivity reconstruction script (decide on the structure of the script)

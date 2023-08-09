@@ -18,9 +18,16 @@ def get_cli_args():
     return cli, matfiles
 
 def ortho_defect_col(matrix):
+    """
+    Calculate the orthogonality defect of a matrix based on its columns.
+    Parameters:
+    matrix (numpy.ndarray): Input matrix for which the orthogonality defect is computed.
+    Returns:
+    float: Orthogonality defect value.
+    """
     print("value of the determinant", np.linalg.det(matrix.T @ matrix))
-    return np.prod(np.linalg.norm(matrix, axis=0)) / np.sqrt(abs(np.linalg.det(matrix.T @ matrix))) #Olena messes up here: Some determinans were negative, so I added an absolute value
-    
+    return np.prod(np.linalg.norm(matrix, axis=0)) / np.sqrt(abs(np.linalg.det(matrix.T @ matrix))) 
+
 def main(): 
     # Get command-line arguments
     cli_args, matfiles = get_cli_args()
@@ -39,12 +46,8 @@ def main():
         matrix /= np.linalg.norm(matrix, axis=1).reshape(-1,1)
 
         #Calculating the orthogonality defect 
-        defect = ortho_defect_col(matrix)
+        defect = ortho_defect_col(matrix.T)
         print(f"Orthogonal defect for the {Path(matfile).stem} is: ", defect)
 
-
-
-    
-    
     
 if __name__ == "__main__": main()     

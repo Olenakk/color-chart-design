@@ -12,6 +12,25 @@ def get_cli_args():
 
     return cli 
 
+def load_data(cli_args):
+    refl_file = cli_args["refl"]
+    light_file = cli_args["lt"]
+    
+    # Read the CSV file using the provided file name
+    R = pd.read_csv(refl_file#, header=None
+                    ).values
+    L = pd.read_csv(light_file #, header=None
+                    ).values
+    
+    data = dict(
+        cli_args = cli_args, 
+        R        = R, 
+        L        = L, 
+    )
+
+    return data
+
+
 def create_csv_file(file_name, matrix, selected_indexes):
    original_selected_vectors = np.array(matrix[selected_indexes])
    concatinated_array = np.concatenate([np.array(selected_indexes).reshape(-1, 1),original_selected_vectors], axis=1)
@@ -66,19 +85,12 @@ def main():
 
     # Get command-line arguments
     cli_args = get_cli_args()
-    refl_file = cli_args["refl"]
-    light_file = cli_args["lt"]
+    data = load_data(cli_args)
     output_file = cli_args["output"]
 
-    # Read the CSV file using the provided file name
-    R = pd.read_csv(refl_file#, header=None
-                    ).values
-    L = pd.read_csv(light_file #, header=None
-                    ).values
-  
     #selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, 24)
-    selected_indexes, selected_vectors = select_orthonormal_vectors_given_light(R, L, 24)
-    create_csv_file(output_file, R, selected_indexes)
+    selected_indexes, selected_vectors = select_orthonormal_vectors_given_light(data["R"], data["L"], 24)
+    create_csv_file(output_file, data["R"], selected_indexes)
     print("CSV file has been successfully created! ")
 
 

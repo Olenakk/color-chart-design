@@ -34,6 +34,12 @@ def calc_RGB(R, L, S):
 
     return I
 
+def calc_RGB_uniform(R, S): 
+    num_rows, num_cols = R.shape
+    I = R@S.T
+
+    return I 
+
 def reshape_colorchart(rows, cols, img):
     return img.reshape(rows, cols, 3)
 
@@ -46,7 +52,6 @@ def plot_image(I, cli_args):
 
     if cli_args["rows"] and cli_args["cols"]:
         image_reshaped = reshape_colorchart(cli_args["rows"], cli_args["cols"], image_reshaped)
-        print(image_reshaped.shape)
 
     # Save the reshaped RGB image to a file using imwrite
     cv2.imwrite(cli_args["o"], image_reshaped)
@@ -69,9 +74,15 @@ def main():
     S = pd.read_csv(cli_args["obs"], dtype='float64', #header=None
                     ).values
 
-    R /= np.linalg.norm(R, axis=1).reshape(-1,1)
+    #R /= np.linalg.norm(R, axis=1).reshape(-1,1) #Remove normalization - distorts visualization 
     I = calc_RGB(R, L, S)
+    ######## Derya normilizes the image ########### 
+    I = I**(1/2.2)
+    #############################################
+    #I = calc_RGB_uniform(R, S)
+
+    img_conc = np.concatenate([I[:, i].reshape(-1, 1) for i in [2,1,0]], axis=1)
     
-    plot_image(I, cli_args)
+    plot_image(img_conc, cli_args)
 
 if __name__ == "__main__":  main()

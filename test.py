@@ -3,6 +3,8 @@ import ortho_sel
 import numpy as np 
 import pandas as pd
 import scipy
+from pathlib import Path
+import os
 import matplotlib.pyplot as plt
 import ortho_sel 
 import ortho_defect 
@@ -11,6 +13,9 @@ def get_cli_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infile", type=str, help="Path to an input file") 
     parser.add_argument("-o", "--outfile", type=str, help="Path to an output file")
+    parser.add_argument("-f", "--outfolder", type=str, help="Path to an output folder")
+    parser.add_argument("-r", "--refl", type=str, help="Path to a CSV file with reflectances")
+    parser.add_argument("-l", "--lt", type=str, help="Path to a CSV file with Illuminant")
 
     cli = vars(parser.parse_args())
 
@@ -118,11 +123,22 @@ def shuffle(cli_args):
 
     return df 
 
+# Perform row-wise orthogonal selection and calculate the orthogonality defect for each
+##########################################################################
+def select_row_wise(cli, data, num): 
+    R = data["R"]
+    L = data["L"]
+    for i in range(1, num): 
+        selected_indexes, selected_vectors = ortho_sel.select_orthonormal_vectors_given_light(data["R"], data["L"], i)
+        full_dir_name = Path(cli["outfolder"])
+        infile = str(Path(cli["refl"]).stem)
+        filename = str(full_dir_name.joinpath(f"{infile}-{i}.csv"))
+        ortho_sel.create_csv_file(filename, data["R"], selected_indexes)
+
 def main():
     cli_args = get_cli_args()
-    matrix = shuffle(cli_args)
-    numbers = list(range(400, 701, 10))
-    matrix.to_csv(cli_args["outfile"], index=False, header = numbers)
+    data = ortho_sel.load_data(cli_args)
+    select_row_wise(cli_args, data, 25)
 
 
 # Run the main function
