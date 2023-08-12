@@ -1,13 +1,13 @@
 import argparse
-import ortho_sel
+import select_refls
 import numpy as np 
 import pandas as pd
 import scipy
 from pathlib import Path
 import os
 import matplotlib.pyplot as plt
-import ortho_sel 
-import ortho_defect 
+import select_refls 
+import evaluate 
 
 def get_cli_args():
     parser = argparse.ArgumentParser()
@@ -29,7 +29,7 @@ def test_selection_of_orthonormal_vectors():
     B = np.zeros((100, 31))
     B[:,0] = 1
     C = np.concatenate([B, I], axis = 0) * 42
-    selected_indexes, selected_vectors = ortho_sel.select_orthonormal_vectors(C, 24)
+    selected_indexes, selected_vectors = select_refls.select_orthonormal_vectors(C, 24)
 
     return selected_indexes, selected_vectors
 
@@ -83,7 +83,7 @@ def insert_zeroth_row_after_each_row(orthogonal_matrix):
 #Testing orthogonality defect using an identity matrix 
 ##########################################################################
 def test_ortho_defect_col(): 
-    defect = ortho_defect.ortho_defect_col(np.identity(10))
+    defect = evaluate.ortho_defect_col(np.identity(10))
     print(defect)
 
 
@@ -126,18 +126,16 @@ def shuffle(cli_args):
 # Perform row-wise orthogonal selection and calculate the orthogonality defect for each
 ##########################################################################
 def select_row_wise(cli, data, num): 
-    R = data["R"]
-    L = data["L"]
     for i in range(1, num): 
-        selected_indexes, selected_vectors = ortho_sel.select_orthonormal_vectors_given_light(data["R"], data["L"], i)
+        selected_indexes, selected_vectors = select_refls.select_orthonormal_vectors_given_light(data["R"], data["L"], i)
         full_dir_name = Path(cli["outfolder"])
         infile = str(Path(cli["refl"]).stem)
         filename = str(full_dir_name.joinpath(f"{infile}-{i}.csv"))
-        ortho_sel.create_csv_file(filename, data["R"], selected_indexes)
+        select_refls.create_csv_file(filename, data["R"], selected_indexes)
 
 def main():
     cli_args = get_cli_args()
-    data = ortho_sel.load_data(cli_args)
+    data = select_refls.load_data(cli_args)
     select_row_wise(cli_args, data, 25)
 
 

@@ -3,11 +3,34 @@
 
 
 Questions: 
-- Does it make sense that some of the determinants for selected vectors are zero (MacBeth)? 
+- Do we need to normalize reflectances? Show Munsell.png 
+- How to save the visualization to a pdf 
 
 TO DO: 
-- Send a CSV of RGBs to Derya 
-- Ortho_sel: save an output file with file name and ortho defect 
-- Visualize.py: allow to visualize all the csv files in a specified folder 
-- Visualize the selected rows from MacBeth 
-- Write the spctral sensitivity reconstruction script (decide on the structure of the script)
+- Test with selecting 93 reflectances 
+- Vis_chart.py (Make an output file a PDF) - line 28
+- Revisualize the color charts from custom databases 🛠️ 
+- Write the spctral sensitivity reconstruction script (decide on the structure of the script) 🛠️
+----------------------------------------------------------------------------------------------
+Preprocessing: 
+- transpose.py: input.csv --> output.csv ✔️
+- add_col_labels.py: input.csv --> output.csv, -b --bounds start end step (Default 400, 700, 10) ✔️
+- interp.py: input.csv, waves.csv --> output.csv -p plot.pdf ✔️
+
+Visualization: 
+- plot_data.py: input.csv --> output.pdf ✔️
+- plot_imgs.py: infolder\*.png --> output.pdf --ask Grigory if he thinks its necessary ✔️
+- compute_rgbs.py --> output.pdf ✔️
+- vis_chart.py: rgbs.csv -r 3 -c 6 [default: r = 1, col = -1] --> chart.pdf -- Save to PDf 🛠️
+
+Selection: 
+- select_refls: R_DB.csv, num_rows --> output.csv [--method mincos] ✔️
+- evaluate.py: R.csv --> metrix.toml ✔️
+- noise.py: use np.lstsq(RL, I+noise) 🛠️
+
+---------------------------------------------------------------------------------------------
+For documentation: 
+- Main assumption: data always inludes a header (column labels)
+
+For development: 
+-Think about calling vis_chart and evalueate in a loop for the entire folder 

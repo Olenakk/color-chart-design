@@ -5,16 +5,21 @@ import pandas as pd
 
 def get_cli_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("refl", type=str, help="Path to a CSV file with reflectances")
-    parser.add_argument("lt", type=str, help="Path to a CSV file with Illuminant")
-    parser.add_argument("-o", "--output", type=str, default="selected_vectors.csv", help="Output file path")
+    parser.add_argument("reflectances", type=str, help="Path to a CSV file with reflectances data base")
+    parser.add_argument("light", type=str, help="Path to a CSV file with Illuminant")
+    parser.add_argument("num_rows", type=int, help="Number of reflectance vectors to be selected")
+    parser.add_argument("outfile", type=str, help="Path to an output CSV file")
+    parser.add_argument("-m", "--method", choices=["mincos"], default="mincos",
+                    help="Select one or more methods") #Extend when more methods are developed 
     cli = vars(parser.parse_args())
 
     return cli 
 
 def load_data(cli_args):
-    refl_file = cli_args["refl"]
-    light_file = cli_args["lt"]
+    refl_file = cli_args["reflectances"]
+    light_file = cli_args["light"]
+    num_rows = cli_args["num_rows"]
+    outfile = cli_args["outfile"]
     
     # Read the CSV file using the provided file name
     R = pd.read_csv(refl_file#, header=None
@@ -26,10 +31,11 @@ def load_data(cli_args):
         cli_args = cli_args, 
         R        = R, 
         L        = L, 
+        num_rows = num_rows, 
+        outfile = outfile
     )
 
     return data
-
 
 def create_csv_file(file_name, matrix, selected_indexes):
    original_selected_vectors = np.array(matrix[selected_indexes])
@@ -86,11 +92,10 @@ def main():
     # Get command-line arguments
     cli_args = get_cli_args()
     data = load_data(cli_args)
-    output_file = cli_args["output"]
 
-    #selected_indexes, selected_vectors = select_orthonormal_vectors(matrix, 24)
-    selected_indexes, selected_vectors = select_orthonormal_vectors_given_light(data["R"], data["L"], 24)
-    create_csv_file(output_file, data["R"], selected_indexes)
+    if cli_args["method"] == "mincos": 
+        selected_indexes, selected_vectors = select_orthonormal_vectors_given_light(data["R"], data["L"], data["num_rows"])
+    create_csv_file(data["outfile"], data["R"], selected_indexes)
     print("CSV file has been successfully created! ")
 
 

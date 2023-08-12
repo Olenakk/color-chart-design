@@ -15,9 +15,9 @@ def get_cli_args():
         )
 
     # Add command-line arguments
-    parser.add_argument("data", type=str, help="Path to the CSV file containing data to be interpolated.")
-    parser.add_argument("pts", type=str, help="Path to the CSV file containing points to be interpolated (wavelength)") 
-    parser.add_argument("output", type=str, help="Output file path to save the interpolated data as a CSV file")
+    parser.add_argument("infile", type=str, help="Path to the CSV file containing data to be interpolated.")
+    parser.add_argument("waves", type=str, help="Path to the CSV file containing points to be interpolated (wavelength)") 
+    parser.add_argument("outfile", type=str, help="Output file path to save the interpolated data as a CSV file")
     parser.add_argument("-p", "--plot", type=str, help="Flag to plot the interpolated data")
     parser.add_argument("-t", "--transpose", action="store_true", help="Transpose the data before interpolation")
     
@@ -55,8 +55,8 @@ def main():
     cli_args = get_cli_args()
 
     # Read the data and points from CSV files
-    data = pd.read_csv(cli_args["data"], dtype='float64', header=None).values
-    pts = pd.read_csv(cli_args["pts"], header=None, dtype='float64').values.flatten()
+    data = pd.read_csv(cli_args["infile"], dtype='float64', header=None).values
+    pts = pd.read_csv(cli_args["waves"], header=None, dtype='float64').values.flatten()
     
     if cli_args["transpose"]: # Check if the '--transpose' flag is present
         data = data.T
@@ -73,6 +73,6 @@ def main():
         plot_interp_data(xp, fp, data_interp, pts, cli_args)
 
     # Save interpolated data to the output file
-    np.savetxt(cli_args["output"], data_interp, header=",".join(map(str, pts)), delimiter=",", fmt='%.4f', comments='')
+    np.savetxt(cli_args["outfile"], data_interp, header=",".join(map(str, pts)), delimiter=",", fmt='%.4f', comments='')
 
 if __name__ == "__main__":  main()

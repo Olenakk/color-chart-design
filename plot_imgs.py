@@ -3,7 +3,6 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import argparse
 
-
 def get_cli_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("infolder", type=str, help="Path to the folder with input images") 
