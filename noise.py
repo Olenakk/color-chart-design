@@ -19,13 +19,25 @@ def get_cli_args():
 #Adjust noise based on intensity 
 def calc_RGB_error(R_L, S, noise_intensity): 
     #num_rows, num_cols = R.shape
+    
     I = R_L@S.T 
+
+    
 
     #Adding ramdom noise to the colors
     noise = np.random.normal(0, noise_intensity, I.shape)
     I = I + noise
 
+    
+
     S_hat, residuals, RANK, sing = np.linalg.lstsq(R_L, I, rcond=None)
+
+    #print(S.T.shape)
+    #print(R_L.shape)
+    #print(I.shape)
+    #print(S_hat.shape)
+
+    S_hat = S_hat.T
 
     return np.linalg.norm(S - S_hat)
 
@@ -49,7 +61,7 @@ def main():
 
     num_reps = 1000
     resolution = 100
-    max_noise = 10000.0
+    max_noise = 0.01
     R_L = R*L.reshape((1,-1))   
     intensities = np.linspace(0, max_noise, resolution)
     errors = np.array([[calc_RGB_error(R_L, S, ni) for ni in intensities] for _ in range(num_reps)]).mean(axis=0)

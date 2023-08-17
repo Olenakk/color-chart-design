@@ -8,7 +8,7 @@ Questions:
 TO DO: 
 - Test with selecting 93 reflectances 
 - Revisualize the color charts from custom databases 🛠️ 
-- Write the spctral sensitivity reconstruction script (decide on the structure of the script) 🛠️
+- Figure out the shape of the graph in noise.py 🛠️
 ----------------------------------------------------------------------------------------------
 Preprocessing: 
 - transpose.py: input.csv --> output.csv ✔️
@@ -33,7 +33,7 @@ For documentation:
 For development: 
 - Make the light cli arg optional 
 - plot_data.py: give an option to use plt.show()
--vis_chart.py:  line 30: #GIVE AN OPTION TO RESIZE AN IMAGE (NO NEED TO ZOOM IN); line 37: #ADD AS A VIS_EXPONENT PARAMETER WITH 1 AS A DEFAULT 
+- vis_chart.py:  line 30: #GIVE AN OPTION TO RESIZE AN IMAGE (NO NEED TO ZOOM IN); line 37: #ADD AS A VIS_EXPONENT PARAMETER WITH 1 AS A DEFAULT 
 - evaluate.py: line 14: make the toml file optional; dump in the terminal 
--Think about calling vis_chart and evalueate in a loop for the entire folder 
+- Think about calling vis_chart and evalueate in a loop for the entire folder 
 - Cli arg: number of digits 
