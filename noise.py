@@ -19,16 +19,16 @@ def get_cli_args():
 #Adjust noise based on intensity 
 def calc_RGB_error(R_L, S, noise_intensity): 
     #num_rows, num_cols = R.shape
+
+    S = S.T
     
-    I = R_L@S.T 
+    I = R_L@S
 
     #Adding ramdom noise to the colors
     noise = np.random.normal(0, noise_intensity, I.shape)
     I = I + noise
 
-    S_hat, residuals, RANK, sing = np.linalg.lstsq(R_L, I, rcond=None)
-
-    S_hat = S_hat.T #ADDED DURING DEBUGGING 
+    S_hat, residuals, RANK, sing = np.linalg.lstsq(R_L, I)
 
     return np.linalg.norm(S - S_hat)
 
