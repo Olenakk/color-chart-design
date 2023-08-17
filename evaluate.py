@@ -4,9 +4,6 @@ import pandas as pd
 import toml
 import matplotlib.pyplot as plt
 
-import select_refls 
-
-
 def get_cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("reflectances", type=str, help="Path to a CSV file with reflectances")
@@ -30,19 +27,10 @@ def ortho_defect_col(R):
     ortho_defect = np.prod(np.linalg.norm(R, axis=0)) / np.sqrt(abs(np.linalg.det(R.T @ R))) 
     return ortho_defect
 
-#NO NEED TO RUN THE SELECTION AGAIN, JUST LOOK AT 1ST ROW, 2 ROWS, 3 ROWS, AND SO ON.. 
 
-# Perform row-wise orthogonal selection and calculate the orthogonality defect for each
+# Calculate orthogonality defect for each orthogonal selection step
 def seq_ortho_defect(R):
-    #print([R[:i+1].shape for i in range(R.shape[0])] )
-    #print([np.linalg.norm(R[:i+1]) for i in range(R.shape[0])] )
     seq_ortho = [ortho_defect_col(R[:(i+1)].T) for i in range(R.shape[0])]
-    #for i in range(1, num+1): 
-    #    selected_indexes = select_refls.greedy_cosmin(R, L, i)
-    #    original_selected_vectors = np.array(R[selected_indexes])
-    #    ortho_defect = ortho_defect_col(original_selected_vectors.T)
-    #    seq_ortho.append(ortho_defect)
-
     return seq_ortho
 
 def calc_sing_values(R): 

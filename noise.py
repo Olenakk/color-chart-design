@@ -22,22 +22,13 @@ def calc_RGB_error(R_L, S, noise_intensity):
     
     I = R_L@S.T 
 
-    
-
     #Adding ramdom noise to the colors
     noise = np.random.normal(0, noise_intensity, I.shape)
     I = I + noise
 
-    
-
     S_hat, residuals, RANK, sing = np.linalg.lstsq(R_L, I, rcond=None)
 
-    #print(S.T.shape)
-    #print(R_L.shape)
-    #print(I.shape)
-    #print(S_hat.shape)
-
-    S_hat = S_hat.T
+    S_hat = S_hat.T #ADDED DURING DEBUGGING 
 
     return np.linalg.norm(S - S_hat)
 
