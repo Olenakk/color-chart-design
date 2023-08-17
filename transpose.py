@@ -11,6 +11,6 @@ def main():
     cli = get_cli_args()
     infile = cli["infile"]
     outfile = cli["outfile"]
-    pd.DataFrame(pd.read_csv(infile, dtype='float64').values.T).to_csv(outfile, index=False, header=False)
+    pd.DataFrame(pd.read_csv(infile, dtype='float64', header=None).values.T).to_csv(outfile, index=False, header=False)
     
 if __name__ == '__main__': main()

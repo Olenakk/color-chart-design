@@ -22,7 +22,8 @@ def main():
     csv_file = cli_args["infile"]
     outfile = cli_args["outfile"]
     bounds = cli_args["bounds"]
-    matrix = pd.read_csv(csv_file, header=None)
+    matrix = pd.read_csv(csv_file, header=None
+                         )
 
     if cli_args["transpose"]: # Check if the '--transpose' flag is present
         matrix = matrix.T

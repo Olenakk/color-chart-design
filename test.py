@@ -29,7 +29,7 @@ def test_selection_of_orthonormal_vectors():
     B = np.zeros((100, 31))
     B[:,0] = 1
     C = np.concatenate([B, I], axis = 0) * 42
-    selected_indexes, selected_vectors = select_refls.select_orthonormal_vectors(C, 24)
+    selected_indexes, selected_vectors = select_refls.greedy_cosmin(C, 24)
 
     return selected_indexes, selected_vectors
 

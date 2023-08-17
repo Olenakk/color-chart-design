@@ -11,6 +11,8 @@ def get_cli_args():
     parser.add_argument("outfile", type=str, help="Path to an output CSV file")
     parser.add_argument("-m", "--method", choices=["mincos"], default="mincos",
                     help="Select one or more methods") #Extend when more methods are developed 
+    parser.add_argument("--min_norm_2", type=float, default=0.0)
+    parser.add_argument("--min_norm_inf", type=float, default=0.0)
     cli = vars(parser.parse_args())
 
     return cli 
@@ -54,7 +56,7 @@ def gram_schmidt_append(orthonormal_vectors, vector_to_project):
     orthonormal_vectors.append(norm_vector)
     return orthonormal_vectors
 
-def select_orthonormal_vectors(matrix, num_dimensions):
+def greedy_cosmin(matrix, num_dimensions):
     max_index = np.argmax(np.linalg.norm(matrix, axis=1))
     initial_vector = matrix[max_index, :]  # Get the initial vector using the max_index
     normalized_initial_vector = initial_vector / np.linalg.norm(initial_vector)
@@ -77,25 +79,47 @@ def select_orthonormal_vectors(matrix, num_dimensions):
         selected_indexes.append(best_index)
         selected_vectors = gram_schmidt_append(selected_vectors, matrix[best_index, :])
 
-    return selected_indexes, selected_vectors
+    return selected_indexes
 
 #Selecting most orthogonal reflectances based on the standard light 
 def select_orthonormal_vectors_given_light(R, L, num_dimensions):
     num_rows, num_cols = R.shape
     R_L = R*L.reshape((1,num_cols))
-    selected_indexes, selected_vectors = select_orthonormal_vectors(R_L, num_dimensions)
+    selected_indexes = greedy_cosmin(R_L, num_dimensions)
     
-    return selected_indexes, selected_vectors
+    return selected_indexes
+
+def process_data(data):
+    filtered_idxs = [
+        i for i,row in enumerate(data["R"])
+        if np.linalg.norm(row) >= data["cli_args"]["min_norm_2"]
+        and np.linalg.norm(row, ord=np.inf) >= data["cli_args"]["min_norm_inf"]
+    ]
+    R = data["R"][filtered_idxs]
+    idx_map = {i:idx for i,idx in enumerate(filtered_idxs)}
+    #print(idx_map)
+
+    return dict(
+        cli_args = data["cli_args"],
+        R_unfiltered = data["R"],
+        R        = R,
+        L        = data["L"],
+        num_rows = data["num_rows"],
+        outfile  = data["outfile"],
+        idx_map  = idx_map,
+    )
 
 def main():
 
     # Get command-line arguments
     cli_args = get_cli_args()
-    data = load_data(cli_args)
+    data = process_data(load_data(cli_args))
 
     if cli_args["method"] == "mincos": 
-        selected_indexes, selected_vectors = select_orthonormal_vectors_given_light(data["R"], data["L"], data["num_rows"])
-    create_csv_file(data["outfile"], data["R"], selected_indexes)
+        selected_indexes = select_orthonormal_vectors_given_light(data["R"], data["L"], data["num_rows"])
+        selected_indexes = [data["idx_map"][idx] for idx in selected_indexes]
+
+    create_csv_file(data["outfile"], data["R_unfiltered"], selected_indexes)
     print("CSV file has been successfully created! ")
 
 

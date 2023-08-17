@@ -16,7 +16,7 @@ def get_cli_args():
 
     # Add command-line arguments
     parser.add_argument("infile", type=str, help="Path to the CSV file containing data to be interpolated.")
-    parser.add_argument("waves", type=str, help="Path to the CSV file containing points to be interpolated (wavelength)") 
+    parser.add_argument("waves", type=str, help="Path to the CSV file containing points to be interpolated (wavelengths)") 
     parser.add_argument("outfile", type=str, help="Output file path to save the interpolated data as a CSV file")
     parser.add_argument("-p", "--plot", type=str, help="Flag to plot the interpolated data")
     parser.add_argument("-t", "--transpose", action="store_true", help="Transpose the data before interpolation")

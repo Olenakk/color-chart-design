@@ -11,7 +11,7 @@ def get_cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("reflectances", type=str, help="Path to a CSV file with reflectances")
     parser.add_argument("light", type=str, help="Path to a CSV file with light")
-    parser.add_argument("outfile", type=str, help="Path to a toml file with metrix values")
+    parser.add_argument("outfile", type=str, help="Path to a toml file with metrix values") #MAKE THIS OPTIONAL, DUMP STATS IN THE TERMINAL 
     parser.add_argument("-i", "--index", action="store_true", help="Ignore the first column of the provided reflectances data (that might include indices)" )
     parser.add_argument("-p", "--plot", action="store_true", help="Plot singular values for each row" )
     cli = vars(parser.parse_args())
@@ -26,18 +26,22 @@ def ortho_defect_col(R):
     Returns:
     float: Orthogonality defect value.
     """
-    print("value of the determinant", np.linalg.det(R.T @ R))
+    print("value of the determinant", np.linalg.det(R.T @ R), R.shape)
     ortho_defect = np.prod(np.linalg.norm(R, axis=0)) / np.sqrt(abs(np.linalg.det(R.T @ R))) 
     return ortho_defect
 
+#NO NEED TO RUN THE SELECTION AGAIN, JUST LOOK AT 1ST ROW, 2 ROWS, 3 ROWS, AND SO ON.. 
+
 # Perform row-wise orthogonal selection and calculate the orthogonality defect for each
-def seq_ortho_defect(R, L, num):
-    seq_ortho = [] 
-    for i in range(1, num+1): 
-        selected_indexes, selected_vectors = select_refls.select_orthonormal_vectors_given_light(R, L, i)
-        original_selected_vectors = np.array(R[selected_indexes])
-        ortho_defect = ortho_defect_col(original_selected_vectors.T)
-        seq_ortho.append(ortho_defect)
+def seq_ortho_defect(R):
+    #print([R[:i+1].shape for i in range(R.shape[0])] )
+    #print([np.linalg.norm(R[:i+1]) for i in range(R.shape[0])] )
+    seq_ortho = [ortho_defect_col(R[:(i+1)].T) for i in range(R.shape[0])]
+    #for i in range(1, num+1): 
+    #    selected_indexes = select_refls.greedy_cosmin(R, L, i)
+    #    original_selected_vectors = np.array(R[selected_indexes])
+    #    ortho_defect = ortho_defect_col(original_selected_vectors.T)
+    #    seq_ortho.append(ortho_defect)
 
     return seq_ortho
 
@@ -57,7 +61,6 @@ def plot_singular_values(sing_values):
 def main(): 
     # Get command-line arguments
     cli = get_cli()
-    outfile = cli["outfile"]
 
     R = pd.read_csv(cli["reflectances"]#, header=None
                     ).values
@@ -75,7 +78,7 @@ def main():
 
     #Calculating metrix for the reflectances matrix
     ortho_defect = ortho_defect_col(R.T)
-    seq_ortho = seq_ortho_defect(R, L, len(R))
+    seq_ortho = seq_ortho_defect(R*L)
     sing_values = calc_sing_values(R) 
 
     if cli["plot"]: 

@@ -4,11 +4,9 @@
 
 Questions: 
 - Do we need to normalize reflectances? Show Munsell.png 
-- How to save the visualization to a pdf 
 
 TO DO: 
 - Test with selecting 93 reflectances 
-- Vis_chart.py (Make an output file a PDF) - line 28
 - Revisualize the color charts from custom databases 🛠️ 
 - Write the spctral sensitivity reconstruction script (decide on the structure of the script) 🛠️
 ----------------------------------------------------------------------------------------------
@@ -21,7 +19,7 @@ Visualization:
 - plot_data.py: input.csv --> output.pdf ✔️
 - plot_imgs.py: infolder\*.png --> output.pdf --ask Grigory if he thinks its necessary ✔️
 - compute_rgbs.py --> output.pdf ✔️
-- vis_chart.py: rgbs.csv -r 3 -c 6 [default: r = 1, col = -1] --> chart.pdf -- Save to PDf 🛠️
+- vis_chart.py: rgbs.csv -r 3 -c 6 [default: r = 1, col = -1] --> chart.pdf -- Save to PDf ✔️
 
 Selection: 
 - select_refls: R_DB.csv, num_rows --> output.csv [--method mincos] ✔️
@@ -33,4 +31,9 @@ For documentation:
 - Main assumption: data always inludes a header (column labels)
 
 For development: 
+- Make the light cli arg optional 
+- plot_data.py: give an option to use plt.show()
+-vis_chart.py:  line 30: #GIVE AN OPTION TO RESIZE AN IMAGE (NO NEED TO ZOOM IN); line 37: #ADD AS A VIS_EXPONENT PARAMETER WITH 1 AS A DEFAULT 
+- evaluate.py: line 14: make the toml file optional; dump in the terminal 
 -Think about calling vis_chart and evalueate in a loop for the entire folder 
+- Cli arg: number of digits 
