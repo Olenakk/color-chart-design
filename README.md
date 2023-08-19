@@ -303,11 +303,11 @@ The script generates an output CSV file containing the selected reflectance vect
 
 Index |410 | 420 |430|440|...|690|700|
 ------|----|-----|---|---|---|---|---
- 91 | R00 | R01 | R02 |R03| ... | R0(n-1)|R0(n)
- 4 | R10 | R11 | R12 |R13| ... | R1(n-1)|R1(n)
- 119 | R20 | R21 | R22 |R23| ... | R2(n-1)|R2(n)
+ 91 | R[0,0] | R[0,1] | R[0,2] |R[0,3]| ... | R[0,(n-1)]|R[0,n]
+ 4 | R[1,0] | R[1,1][ ,|] R[1,2] |R[1,3]| ... | R[1,(n-1)]|R[1,n]
+ 119 | R[2,0] | R[2,1] | R[2,2] |R[2,3]| ... | R[2,(n-1)]|R[2,n]
  ... | ... | ... | ... |...| ... | ...|...
-76 |R(num_rows)0 | R(num_rows)1 | R(num_rows)2 |R(num_rows)3| ... | R(num_rows)(n-1)|R(num_rows)(n)
+76 |R[num_rows,0] | R[num_rows,1] | R[num_rows,2] |R[num_rows,3]| ... | R[num_rows,(n-1)]|R[num_rows,n]
 
 ## Example Usage
 1. Select reflectance vectors using the default "mincos" method:
