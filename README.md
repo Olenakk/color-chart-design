@@ -1,5 +1,5 @@
 
-# Color Chart Detection Tool
+# Color Chart Design Tool
 Welcome to the project repository focused on crafting an exceptional color checker (color chart) with color patches exhibiting linearly independent reflectance properties. Our mission revolves around providing a comprehensive toolkit, empowering users to preprocess their input datasets seamlessly, visualize both initial and intermediate data representations, select the most orthogonal reflectances embedded within the dataset, and conduct thorough evaluations of the curated dataset.
 
 ## <font color=FD8D14> **Key Features:** </font>
