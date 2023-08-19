@@ -8,8 +8,9 @@ def get_cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("reflectances", type=str, help="Path to a CSV file with reflectances")
     parser.add_argument("light", type=str, help="Path to a CSV file with light")
-    parser.add_argument("outfile", type=str, help="Path to a toml file with metrix values") #MAKE THIS OPTIONAL, DUMP STATS IN THE TERMINAL 
+    parser.add_argument("-o", "--outfile", type=str, help="Path to a toml file with metrix values") 
     parser.add_argument("-i", "--index", action="store_true", help="Ignore the first column of the provided reflectances data (that might include indices)" )
+    parser.add_argument("-s", "--sig_figs", type=int, help="Number of significant figures")
     parser.add_argument("-p", "--plot", action="store_true", help="Plot singular values for each row" )
     cli = vars(parser.parse_args())
 
@@ -23,7 +24,7 @@ def ortho_defect_col(R):
     Returns:
     float: Orthogonality defect value.
     """
-    print("value of the determinant", np.linalg.det(R.T @ R), R.shape)
+    #print("value of the determinant", np.linalg.det(R.T @ R), R.shape)
     ortho_defect = np.prod(np.linalg.norm(R, axis=0)) / np.sqrt(abs(np.linalg.det(R.T @ R))) 
     return ortho_defect
 
@@ -78,10 +79,19 @@ def main():
         "seq_ortho": seq_ortho,
         "sing_values": sing_values
     }
+    if cli["sig_figs"] is not None: 
+        # Round the values in the results dictionary to cli["sig_figs"]
+        results = {key: np.around(value, decimals=cli["sig_figs"]) for key, value in results.items()}
+
+
+    # Print each element of the dictionary on a separate line
+    for key, value in results.items():
+        print(f"{key}: {value}")
 
     # Save results to a TOML file
-    with open(cli["outfile"], "w") as toml_file:
-        toml.dump(results, toml_file)
+    if cli["outfile"] is not None: 
+        with open(cli["outfile"], "w") as toml_file:
+            toml.dump(results, toml_file)
 
     
 if __name__ == "__main__": main()     

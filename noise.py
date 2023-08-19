@@ -10,7 +10,6 @@ def get_cli_args():
     parser.add_argument("ground_truth", type=str, help="Path to the CSV file with groud truth")
     parser.add_argument("reflectances", type=str, help="Path to the CSV file containing reflectances data")
     parser.add_argument("light", type=str, help="Path to the CSV file containing light data")
-    #parser.add_argument("observer", type=str, help="Path to the CSV file containing the CIE Standard Observer data")
     parser.add_argument("-i", "--index", action="store_true", help="Ignore the first column of the provided reflectances data (that might include indices)" )
 
     cli = vars(parser.parse_args())
@@ -46,8 +45,6 @@ def main():
 
     #Ignore the first column of the reflectances data 
     if cli_args["index"]: # Check if the index flag is present
-       #R = pd.read_csv(cli_args["reflectances"], dtype='float64', usecols=range(1,R.shape[1]), #header=None, 
-       #                ).values
        R = R[:,1:]
 
     num_reps = 1000

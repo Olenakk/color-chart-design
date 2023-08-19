@@ -10,6 +10,7 @@ def get_cli_args():
     parser.add_argument("infile", type=str, help = "Path to a CSV file with data to be plotted")
     parser.add_argument("outfile", type=str, help="Path to a PDF file where the plot is saved")
     parser.add_argument("-i", "--index", action="store_true", help="Ignore the first column of the provided reflectances data (that might include indices)" )
+    parser.add_argument("-p", "--plot", action="store_true", help="Flag to show the plot")
     return vars(parser.parse_args())
 
 def plot_data(x, y, cli, filename):
@@ -34,6 +35,8 @@ def main():
     y = data[1:,:]
 
     filename = str(Path(cli["infile"]).stem)
-    plot_data(x, y, cli, filename)
+
+    if cli["plot"]: 
+        plot_data(x, y, cli, filename)
 
 if __name__ == '__main__': main()
