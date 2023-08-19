@@ -20,17 +20,17 @@ Welcome to the project repository focused on crafting an exceptional color check
 # 1. Select Data 
 <font color=FD8D14>_The data utilized should be in CSV format_</font>
 ## Reflectances 
-* User's reflectances database should be an _m by n_ CSV file with a header that indicates a wavelength spectrum. See the format of the table below: 
+* User's reflectances database should be an _m by n_ CSV file with a header that indicates a wavelength spectrum. See the format of the **example** table below: 
 
-**R, Reflectances for a given wavelength spectrum**
+**R, Reflectances for a given wavelength spectrum (example)** 
 
 400 |410 | 420 |430|...|690|700|
 ----|----|-----|---|---|---|---|
- R00 | R01 | R02 |R03| ... | R0(n-1)|R0(n)
- R10 | R11 | R12 |R13| ... | R1(n-1)|R1(n)
- R20 | R21 | R22 |R23| ... | R2(n-1)|R2(n)
+ R[0,0] | R[0,1] | R[0,2] |R[0,3]| ... | R[0,(n-1)]|R[0][(n)]
+ R[1,0] | R[1,1] | R[1,2] |R[1,3]| ... | R[1,(n-1)]|R[1][(n)]
+ R[2,0] | R[2,1] | R[2,2] |R[2,3]| ... | R[2,(n-1)]|R[2][(n)]
  ... | ... | ... |...| ... | ...|...
-R(m)0 | R(m)1 | R(m)2 |R(m)3| ... | R(m)(n-1)|R(m)(n)
+R[m,0] | R[m,1] | R[m,2] |R[m,3]| ... | R[m,(n-1)]|R[m,n]
 
  * Choose data for user's reflectance database here: https://docs.google.com/spreadsheets/d/10-a_kN8EUBj3IciJ1KHhYuio1Qp91VryB2-H4EuhYZs/edit?usp=sharing
 
@@ -38,23 +38,23 @@ R(m)0 | R(m)1 | R(m)2 |R(m)3| ... | R(m)(n-1)|R(m)(n)
 ## Illuminants (light)
 * User's light data should be a _2 by n_ CSV file with a header that indicates a wavelength spectrum:
 
-**L, Light for a given wavelength spectrum**
+**L, Light for a given wavelength spectrum (example)**
 
 400 |410 | 420 |430|...|690|700|
 ----|----|-----|---|---|---|---|
- L0 | L1 | L2 | L3 |...|L(n-1)| L(n)
+ L[0] | L[1] | L[2] | L[3] |...|L[n-1]| L[n]
 
  * The user can find sample light files in <font color=FD8D14>data\illuminants</font>
 ## Sensitivity 
 * User's sensitivity data should be a _3 by n_ CSV file with a header that indicates a wavelength spectrum:
 
-**S, Sensitivity for a given wavelength spectrum**
+**S, Sensitivity for a given wavelength spectrum (example)**
 
 400 |410 | 420 |430|...|690|700|
 ----|----|-----|---|---|---|---|
- S00 | S01 | S02 | S03| ... | S0(n-1)|S0(n)
- S10 | S11 | S12 | S13| ... | S1(n-1)|S1(n)
- S20 | S21 | S22 | S23| ... | S2(n-1)|S2(n)
+ S[0,0] | S[0,1] | S[0,2] | S[0,3]| ... | S[0,(n-1)]|S[0,n]
+ S[1,0] | S[1,1] | S[1,2] | S[1,3]| ... | S[1,(n-1)]|S[1,n]
+ S[2,0] | S[2,1] | S[2,2] | S[2,3]| ... | S[2,(n-1)]|S[2,n]
 
 * The user can find sample sensitivity data in <font color=FD8D14>data\sensitivity</font>
 
@@ -62,7 +62,11 @@ R(m)0 | R(m)1 | R(m)2 |R(m)3| ... | R(m)(n-1)|R(m)(n)
 
 * User's wavelengths data should be a _1 by n_ CSV file: 
 
-**λ, Wavelength spectrum**
+**λ, Wavelength spectrum (general form)**
+λ[0] |λ[1] | λ[2] |λ[3]|...|λ[n-1]|λ[n]|
+----|----|-----|---|---|---|---|
+
+**λ, Wavelength spectrum (example)**
 
 400 |410 | 420 |430|...|690|700|
 ----|----|-----|---|---|---|---|
